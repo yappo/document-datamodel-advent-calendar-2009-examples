@@ -24,6 +24,11 @@ install_model bookmark => schema {
     key [qw/ url_id user_id /];
     index 'user_id';
     columns qw/ url_id user_id /;
+
+    add_method user => sub {
+        my $row = shift;
+        $row->get_model->lookup( user => $row->user_id );
+    };
 };
 
 1;
