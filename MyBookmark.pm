@@ -3,7 +3,7 @@ use strict;
 use warnings;
 use base 'Data::Model';
 use Data::Model::Schema;
-use Data::Model::Mixin modules => ['+MyBookmark::Mixin::Count'];
+use Data::Model::Mixin modules => ['+MyBookmark::Mixin::Count', 'FindOrCreate'];
 
 {
     # driver setup
