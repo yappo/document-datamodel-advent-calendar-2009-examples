@@ -1,6 +1,7 @@
 package MyBookmark::Mixin::Count;
 use strict;
 use warnings;
+use Data::Model::SQL;
 
 sub register_method {
     +{
@@ -11,7 +12,7 @@ sub register_method {
 sub count {
     my($self, $model) = @_;
 
-   my $dbh = $self->get_driver($model)->r_handle;
+    my $dbh = $self->get_driver($model)->r_handle;
     my $sth = $dbh->prepare_cached('SELECT COUNT(*) AS count FROM ' . $model);
     $sth->execute;
     my $count;
