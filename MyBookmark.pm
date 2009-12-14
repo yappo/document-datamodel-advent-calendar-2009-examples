@@ -42,10 +42,14 @@ install_model bookmark => schema {
     column url_id => int => {};
     column user_id => int => {};
 
+    # create_at を生の値でも使いたい
     column create_at => int => {
         required => 1,
         unsigned => 1,
         default => sub { time() },
+    };
+    # Inflate するのはエイリアスで
+    alias_column create_at => create_dt => {
         inflate => 'DateTime',
     };
 
