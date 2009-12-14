@@ -5,6 +5,8 @@ use base 'Data::Model';
 use Data::Model::Schema;
 use Data::Model::Mixin modules => ['+MyBookmark::Mixin::Count', 'FindOrCreate'];
 
+use DateTime;
+
 {
     # driver setup
     use Data::Model::Driver::DBI;
@@ -26,6 +28,19 @@ install_model bookmark => schema {
     index 'user_id';
     column url_id => int => {};
     column user_id => int => {};
+
+    column create_at => int => {
+        required => 1,
+        unsigned => 1,
+        default => sub { time() },
+        inflate => sub {
+            DateTime->from_epoch( epoch => $_[0] );
+        },
+        deflate => sub {
+            ref($_[0]) && $_[0]->isa('DateTime') ? $_[0]->epoch : $_[0];
+        },
+    };
+
 
     add_method user => sub {
         my $row = shift;
