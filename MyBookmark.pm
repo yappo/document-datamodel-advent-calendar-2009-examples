@@ -5,8 +5,6 @@ use base 'Data::Model';
 use Data::Model::Schema;
 use Data::Model::Mixin modules => ['+MyBookmark::Mixin::Count', 'FindOrCreate'];
 
-use DateTime;
-
 {
     # driver setup
     use Data::Model::Driver::DBI;
@@ -14,6 +12,21 @@ use DateTime;
         dsn => 'dbi:SQLite:dbname=mybookmark.db', '', ''
     );
     base_driver $driver;
+}
+
+{
+    # inflate setup
+    use Data::Model::Schema::Inflate;
+    use DateTime;
+
+    inflate_type DateTime => {
+        inflate => sub {
+            DateTime->from_epoch( epoch => $_[0] );
+        },
+        deflate => sub {
+            ref($_[0]) && $_[0]->isa('DateTime') ? $_[0]->epoch : $_[0];
+        },
+    };
 }
 
 install_model user => schema {
@@ -33,12 +46,7 @@ install_model bookmark => schema {
         required => 1,
         unsigned => 1,
         default => sub { time() },
-        inflate => sub {
-            DateTime->from_epoch( epoch => $_[0] );
-        },
-        deflate => sub {
-            ref($_[0]) && $_[0]->isa('DateTime') ? $_[0]->epoch : $_[0];
-        },
+        inflate => 'DateTime',
     };
 
 
