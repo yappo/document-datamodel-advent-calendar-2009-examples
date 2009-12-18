@@ -29,10 +29,25 @@ use Data::Model::Mixin modules => ['+MyBookmark::Mixin::Count', 'FindOrCreate'];
     };
 }
 
+column_sugar 'user.id'
+    => int => {
+        required => 1,
+        unsigned => 1,
+    };
+
+column_sugar 'global.epoch'
+    => int => {
+        required => 1,
+        unsigned => 1,
+    };
+
+
 install_model user => schema {
     key 'id';
     unique 'nickname';
-    column id => int => {};
+    column 'user.id' => {
+        auto_increment => 1,
+    };
     columns qw/ nickname /;
 };
 
@@ -40,12 +55,10 @@ install_model bookmark => schema {
     key [qw/ url_id user_id /];
     index 'user_id';
     column url_id => int => {};
-    column user_id => int => {};
+    column 'user.id';
 
     # create_at を生の値でも使いたい
-    column create_at => int => {
-        required => 1,
-        unsigned => 1,
+    column 'global.epoch' => 'create_at';
         default => sub { time() },
     };
     # Inflate するのはエイリアスで
