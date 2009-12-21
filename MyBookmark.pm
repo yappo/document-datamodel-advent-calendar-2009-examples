@@ -2,8 +2,9 @@ package MyBookmark;
 use strict;
 use warnings;
 use base 'Data::Model';
-use Data::Model::Schema;
+use Data::Model::Schema sugar => 'mycolumns';
 use Data::Model::Mixin modules => ['+MyBookmark::Mixin::Count', 'FindOrCreate'];
+use Columns;
 
 {
     # driver setup
@@ -28,18 +29,6 @@ use Data::Model::Mixin modules => ['+MyBookmark::Mixin::Count', 'FindOrCreate'];
         },
     };
 }
-
-column_sugar 'user.id'
-    => int => {
-        required => 1,
-        unsigned => 1,
-    };
-
-column_sugar 'global.epoch'
-    => int => {
-        required => 1,
-        unsigned => 1,
-    };
 
 
 install_model user => schema {
