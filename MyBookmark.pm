@@ -15,22 +15,6 @@ use Columns;
     base_driver $driver;
 }
 
-{
-    # inflate setup
-    use Data::Model::Schema::Inflate;
-    use DateTime;
-
-    inflate_type DateTime => {
-        inflate => sub {
-            DateTime->from_epoch( epoch => $_[0] );
-        },
-        deflate => sub {
-            ref($_[0]) && $_[0]->isa('DateTime') ? $_[0]->epoch : $_[0];
-        },
-    };
-}
-
-
 install_model user => schema {
     key 'id';
     unique 'nickname';
@@ -48,13 +32,13 @@ install_model bookmark => schema {
 
     # create_at を生の値でも使いたい
     column 'global.epoch' => 'create_at' => {
-        default => sub { time() },
+        default      => sub { time() },
+        alias_rename => {
+            epoch_dt     => 'create_dt',
+            epoch_dt_utc => 'create_dt_utc',
+            epoch_dt_jst => 'create_dt_jst',
+        },
     };
-    # Inflate するのはエイリアスで
-    alias_column create_at => create_dt => {
-        inflate => 'DateTime',
-    };
-
 
     add_method user => sub {
         my $row = shift;
