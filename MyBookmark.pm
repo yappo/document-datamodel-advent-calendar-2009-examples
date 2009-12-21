@@ -58,7 +58,7 @@ install_model bookmark => schema {
     column 'user.id';
 
     # create_at を生の値でも使いたい
-    column 'global.epoch' => 'create_at';
+    column 'global.epoch' => 'create_at' => {
         default => sub { time() },
     };
     # Inflate するのはエイリアスで
