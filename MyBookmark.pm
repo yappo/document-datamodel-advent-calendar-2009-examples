@@ -10,7 +10,7 @@ use Columns;
     # driver setup
     use Data::Model::Driver::DBI;
     my $driver = Data::Model::Driver::DBI->new(
-        dsn => 'dbi:SQLite:dbname=mybookmark.db', '', ''
+        dsn => 'dbi:SQLite:dbname=mybookmark.db'
     );
     base_driver $driver;
 }
